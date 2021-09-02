@@ -5,10 +5,15 @@ New-Alias od Format-Hex
 
 Import-Module Posh-Git
 
-function dev() {
-    Invoke-BatchFile 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat'
-    # TODO: This seems needed on some systems to get rust to compile correctly
-    # Invoke-BatchFile 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat' x64
+function dev {
+    <#
+        .SYNOPSIS
+            Run to get developer tools like cmake
+    #>
+
+    # TODO: Do I need both, second needed for Rust, first for VS Code
+    # Invoke-BatchFile 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat'
+    Invoke-BatchFile 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat' x64
 }
 
 function DisplayBytesPretty($num) {
@@ -25,8 +30,7 @@ function DisplayBytesPretty($num) {
 
     $suffix = "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"
     $index = 0
-    while ($num -gt 1kb)
-    {
+    while ($num -gt 1kb) {
         $num = $num / 1kb
         $index++
     }
@@ -78,8 +82,7 @@ function DisplayTimePretty {
         default { throw "Can't understand $units" }
     }
 
-    while ($num / $divides[$index] -gt 1 -and $index -le 6)
-    {
+    while ($num / $divides[$index] -gt 1 -and $index -le 6) {
         $num = $num / $divides[$index]
         $index++
     }
@@ -196,55 +199,46 @@ function Watch-Command {
 
     $initialOutput = ""
     $runs = 0
-    Clear-Host
 
     ## Start a continuous loop
-    while($true)
-    {
+    while($true) {
         ## Run the provided script block
         $r = & $ScriptBlock
 
         ## Clear the screen and display the results
         $buffer = $ScriptBlock.ToString().Trim() + "`r`n"
-        $buffer += "`r`n"
-        $textOutput = $r | Out-String
-        $buffer += $textOutput
+        $buffer += $r | Out-String
+
+        Clear-Host
 
         Write-Output $buffer
 
         ## Remember the initial output, if we haven't
         ## stored it yet
-        if(-not $initialOutput)
-        {
+        if(-not $initialOutput) {
             $initialOutput = $textOutput
         }
 
         ## If we are just looking for any change,
         ## see if the text has changed.
-        if($UntilChanged)
-        {
-            if($initialOutput -ne $textOutput)
-            {
+        if($UntilChanged) {
+            if($initialOutput -ne $textOutput) {
                 break
             }
         }
 
         ## If we need to ensure some text is found,
         ## break if we didn't find it.
-        if($While)
-        {
-            if($textOutput -notmatch $While)
-            {
+        if($While) {
+            if($textOutput -notmatch $While) {
                 break
             }
         }
 
         ## If we need to wait for some text to be found,
         ## break if we find it.
-        if($Until)
-        {
-            if($textOutput -match $Until)
-            {
+        if($Until) {
+            if($textOutput -match $Until) {
                 break
             }
         }
@@ -257,13 +251,10 @@ function Watch-Command {
 
         ## Delay
         Start-Sleep -Seconds $DelaySeconds
-
-        Clear-Host
     }
 
     ## Notify the user
-    if(-not $Quiet)
-    {
+    if(-not $Quiet) {
         [Console]::Beep(1000, 1000)
     }
 }
@@ -323,8 +314,7 @@ function Invoke-TimeScript([scriptblock]$scriptBlock, $name) {
             time { ls -recurse } "All the things"
     #>
 
-    if (!$stopWatch)
-    {
+    if (!$stopWatch) {
         $script:stopWatch = new-object System.Diagnostics.StopWatch
     }
     $stopWatch.Reset()
@@ -338,3 +328,45 @@ function Invoke-TimeScript([scriptblock]$scriptBlock, $name) {
 }
 
 New-Alias time Invoke-TimeScript
+
+function Watch-ProcessPerformance {
+    <#
+        .SYNOPSIS
+            Equivalent to UNIX `top` command, watches for processes and orders by CPU (or parameter specified)
+
+        .PARAMETER n
+            Refresh every n seconds
+
+        .PARAMETER o
+            Order by this parameter
+    #>
+
+    param (
+        ## The delay, in seconds, between monitoring attempts
+        [Parameter()]
+        [int] $n = 2,
+
+        ## The parameter to order by
+        [Parameter()]
+        [string] $o = 'cpu'
+    )
+
+    $numProcesses = $Host.UI.RawUI.WindowSize.Height - 6
+    if (-not $numProcesses) {
+        $numProcesses = 15
+    }
+
+    ## Start a continuous loop
+    while($true) {
+        ## Run the provided script block
+        $r = Get-Process | Sort-Object -des $o | Select-Object -f $numProcesses | Format-Table -AutoSize
+
+        ## Clear the screen and display the results
+        Clear-Host
+        Write-Output $r
+
+        Start-Sleep -Seconds $n
+    }
+}
+
+New-Alias top Watch-ProcessPerformance

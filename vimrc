@@ -3,6 +3,8 @@ set syntax=on
 set nocompatible
 set expandtab
 set scrolloff=0
+" Turn off audible bell
+set vb t_vb=
 
 set list
 set lcs=tab:>\ ,trail:%
@@ -39,6 +41,7 @@ nnoremap <C-t> :tabnew<CR>
 vnoremap <C-c> "+y
 inoremap <C-v> <C-r><C-o>*
 inoremap <C-g> <C-v>
+inoremap <S-BS> <BS>
 
 colorscheme torte
 
