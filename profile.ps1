@@ -107,17 +107,24 @@ function Get-DirectorySummary {
 
     param (
         [string]$dir=".",
-        [switch]$h
+        [switch]$h,
+        [switch]$s
     )
+
+    $maxNameLength = (@(($Host.UI.RawUI.WindowSize.Width - 30), 50) | Measure-Object -Maximum).Maximum
 
     $out = Get-ChildItem $dir | ForEach-Object { $f = $_ ;
         Get-ChildItem -r $_.FullName |
         Measure-Object -property length -sum 2>$null |
-        Select-Object @{Name="Name";Expression={$f}},@{Name="Size";Expression={$_.Sum}}
+        Select-Object @{Name="Name";Expression={ if($f.Name.length -ge $maxNameLength) { $f.Name.Substring(0, $maxNameLength) + "..." } else { $f.Name } }},@{Name="Size";Expression={$_.Sum}}
     }
 
     $total = $out | Measure-Object -property Size -Sum | Select-Object Sum
     $out += New-Object psobject -Property @{Name = 'Total Size'; Size = $total.Sum}
+
+    if ($s) {
+        $out = $out | Sort-Object Size
+    }
 
     if ($h) {
         $out = $out | Select-Object Name, @{Name="Size";Expression={DisplayBytesPretty($_.Size)}}
@@ -216,13 +223,13 @@ function Watch-Command {
         ## Remember the initial output, if we haven't
         ## stored it yet
         if(-not $initialOutput) {
-            $initialOutput = $textOutput
+            $initialOutput = $buffer
         }
 
         ## If we are just looking for any change,
         ## see if the text has changed.
         if($UntilChanged) {
-            if($initialOutput -ne $textOutput) {
+            if($initialOutput -ne $buffer) {
                 break
             }
         }
@@ -230,7 +237,7 @@ function Watch-Command {
         ## If we need to ensure some text is found,
         ## break if we didn't find it.
         if($While) {
-            if($textOutput -notmatch $While) {
+            if($buffer -notmatch $While) {
                 break
             }
         }
@@ -238,7 +245,7 @@ function Watch-Command {
         ## If we need to wait for some text to be found,
         ## break if we find it.
         if($Until) {
-            if($textOutput -match $Until) {
+            if($buffer -match $Until) {
                 break
             }
         }

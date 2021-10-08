@@ -242,61 +242,67 @@ Configuration ConfigureDesktop {
             AutoUpgrade = $true
         }
 
-        Environment CargoHome {
-            Name   = 'CARGO_HOME'
-            Value  = 'C:\Program Files\Rust'
-            Ensure = 'Present'
-        }
+        # Environment CargoHome {
+        #     Name   = 'CARGO_HOME'
+        #     Value  = 'C:\Program Files\Rust'
+        #     Ensure = 'Present'
+        # }
 
-        Environment RustupHome {
-            Name   = 'RUSTUP_HOME'
-            Value  = 'C:\Program Files\Rustup'
-            Ensure = 'Present'
-        }
+        # Environment RustupHome {
+        #     Name   = 'RUSTUP_HOME'
+        #     Value  = 'C:\Program Files\Rustup'
+        #     Ensure = 'Present'
+        # }
 
-        File RustupDirectory {
-            Ensure          = 'Present'
-            Type            = 'Directory'
-            DestinationPath = 'C:\Program Files\Rustup'
-            Force           = $true
-        }
+        # File RustupDirectory {
+        #     Ensure          = 'Present'
+        #     Type            = 'Directory'
+        #     DestinationPath = 'C:\Program Files\Rustup'
+        #     Force           = $true
+        # }
 
-        Script InstallRust {
-            GetScript = {
-                @{
-                    Result = $true
-                }
-            }
+        # Script InstallRust {
+        #     GetScript = {
+        #         @{
+        #             Result = $true
+        #         }
+        #     }
 
-            SetScript = {
-                if (-not (Test-Path -Path $ENV:CARGO_HOME)) {
-                    Invoke-WebRequest -Uri 'https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe' -OutFile "$ENV:RUSTUP_HOME\rustup-init.exe"
-                    & "$ENV:RUSTUP_HOME\rustup-init.exe" --profile complete --default-toolchain nightly -y -q 2>$null
-                    Remove-Item "$ENV:RUSTUP_HOME\rustup-init.exe"
-                }
+        #     SetScript = {
+        #         if (-not (Test-Path -Path $ENV:CARGO_HOME)) {
+        #             Invoke-WebRequest -Uri 'https://static.rust-lang.org/rustup/dist/x86_64-pc-windows-msvc/rustup-init.exe' -OutFile "$ENV:RUSTUP_HOME\rustup-init.exe"
+        #             & "$ENV:RUSTUP_HOME\rustup-init.exe" --profile complete --default-toolchain nightly -y -q 2>$null
+        #             Remove-Item "$ENV:RUSTUP_HOME\rustup-init.exe"
+        #         }
 
-                & "$ENV:CARGO_HOME\bin\rustup.exe" update -q 2>$null
-            }
+        #         & "$ENV:CARGO_HOME\bin\rustup.exe" update -q 2>$null
+        #     }
 
-            TestScript = {
-                if (-not (Test-Path -Path $ENV:CARGO_HOME\bin\rustup.exe)) {
-                    return $false
-                }
+        #     TestScript = {
+        #         if (-not (Test-Path -Path $ENV:CARGO_HOME\bin\rustup.exe)) {
+        #             return $false
+        #         }
 
-                $rustupCheck = & 'C:\Program Files\Rust\bin\rustup.exe' check | Where-Object { $_ -NotMatch 'Up to date' }
-                if ($rustupCheck) {
-                    return $false
-                }
+        #         $rustupCheck = & 'C:\Program Files\Rust\bin\rustup.exe' check | Where-Object { $_ -NotMatch 'Up to date' }
+        #         if ($rustupCheck) {
+        #             return $false
+        #         }
 
-                return $true
-            }
-        }
+        #         return $true
+        #     }
+        # }
 
-        Environment AddToPath {
-            Name   = 'PATH'
-            Path   = $true
-            Value  = 'C:\Program Files\tools;C:\Program Files\rust\bin'
-            Ensure = 'Present'
+        # Environment AddToPath {
+        #     Name   = 'PATH'
+        #     Path   = $true
+        #     Value  = 'C:\Program Files\tools;C:\Program Files\rust\bin'
+        #     Ensure = 'Present'
+        # }
+
+        cChocoPackageInstaller NTop {
+            Name        = 'ntop.portable'
+            DependsOn   = '[cChocoInstaller]installChoco'
+            AutoUpgrade = $true
         }
     }
 }
