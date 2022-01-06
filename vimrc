@@ -17,22 +17,28 @@ let &tabstop=g:tabsize
 let &shiftwidth=g:tabsize
 
 set hlsearch incsearch
+
+set shell=powershell
+
+let g:mapleader=','
+let g:maplocalleader='-'
+
 vnoremap K <esc>`<kdd`>p`<V`>
+vnoremap <leader>K K
 vnoremap J <esc>`>jdd`<PjV`>
-vnoremap " <esc>`<i"<esc>`>la"<esc>
-vnoremap ' <esc>`<i'<esc>`>la'<esc>
-vnoremap ` <esc>`<i`<esc>`>la`<esc>
-vnoremap ( <esc>`<i(<esc>`>la)<esc>
-vnoremap { <esc>`<i{<esc>`>la}<esc>
-vnoremap [ <esc>`<i[<esc>`>la]<esc>
+vnoremap <C-J> J
+vnoremap " <esc>`>a"<esc>`<i"<esc>
+vnoremap ' <esc>`>a'<esc>`<i'<esc>
+vnoremap ` <esc>`>a`<esc>`<i`<esc>
+vnoremap ( <esc>`>a)<esc>`<i(<esc>
+vnoremap { <esc>`>a}<esc>`<i{<esc>
+vnoremap [ <esc>`>a]<esc>`<i[<esc>
+vnoremap <leader>< <esc>`>a><esc>`<i<<esc>
 nnoremap <S-tab> :tabprevious<CR>
 nnoremap <tab>   :tabnext<CR>
 inoremap <c-u> <esc>viwUea
 cnoremap <C-Left> <S-Left>
 cnoremap <C-Right> <S-Right>
-
-let g:mapleader=','
-let g:maplocalleader='-'
 
 set showmatch
 set matchtime=3
@@ -41,6 +47,7 @@ nnoremap <C-t> :tabnew<CR>
 vnoremap <C-c> "+y
 inoremap <C-v> <C-r><C-o>*
 inoremap <C-g> <C-v>
+inoremap <C-BS> <C-W>
 inoremap <S-BS> <BS>
 
 colorscheme torte
