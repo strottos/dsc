@@ -160,14 +160,21 @@ Configuration ConfigureDesktop {
             # DependsOn       = '[cChocoPackageInstaller]VisualStudio2019Community'
         }
 
-        cChocoPackageInstaller Terminal {
-            Name        = 'microsoft-windows-terminal'
+        # TODO: Take out? Seems broken... Easily installed through app store
+        # cChocoPackageInstaller Terminal {
+        #     Name        = 'microsoft-windows-terminal'
+        #     DependsOn   = '[cChocoInstaller]installChoco'
+        #     AutoUpgrade = $true
+        # }
+
+        cChocoPackageInstaller Vim {
+            Name        = 'vim-tux'
             DependsOn   = '[cChocoInstaller]installChoco'
             AutoUpgrade = $true
         }
 
-        cChocoPackageInstaller Vim {
-            Name        = 'vim-tux'
+        cChocoPackageInstaller NeoVim {
+            Name        = 'neovim'
             DependsOn   = '[cChocoInstaller]installChoco'
             AutoUpgrade = $true
         }

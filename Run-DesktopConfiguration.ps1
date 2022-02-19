@@ -41,11 +41,7 @@ if (-not $q) {
         if (-not $installed) {
             Write-Output "[$ENV:ComputerName] Installing module $($module.Name) version $requiredVersion"
 
-            if ($module.AllowClobber) {
-                Install-Module -Name $module.Name -RequiredVersion $requiredVersion -Force -AllowClobber
-            } else {
-                Install-Module -Name $module.Name -RequiredVersion $requiredVersion -Force
-            }
+            Install-Module @module -Force
         } else {
             $installedVersion = $installed.Version
             if ($installedVersion -ne $requiredVersion) {
