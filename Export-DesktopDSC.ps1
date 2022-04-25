@@ -133,8 +133,8 @@ Configuration ConfigureDesktop {
             DependsOn   = '[cChocoInstaller]installChoco'
         }
 
-        cChocoPackageInstaller SilverSearcher {
-            Name        = 'ag'
+        cChocoPackageInstaller RipGrep {
+            Name        = 'ripgrep'
             AutoUpgrade = $true
             DependsOn   = '[cChocoInstaller]installChoco'
         }
@@ -173,12 +173,6 @@ Configuration ConfigureDesktop {
             AutoUpgrade = $true
         }
 
-        cChocoPackageInstaller NeoVim {
-            Name        = 'neovim'
-            DependsOn   = '[cChocoInstaller]installChoco'
-            AutoUpgrade = $true
-        }
-
         File VimRC {
             Ensure          = 'Present'
             Type            = 'File'
@@ -211,6 +205,135 @@ Configuration ConfigureDesktop {
             RepositoryURL = 'https://github.com/will133/vim-dirdiff'
             Destination   = 'C:\Program Files\Vim\vimfiles\bundle\dirdiff'
             DependsOn     = @('[cChocoPackageInstaller]Vim','[cChocoPackageInstaller]Git')
+        }
+
+        cChocoPackageInstaller NeoVim {
+            Name        = 'neovim'
+            DependsOn   = '[cChocoInstaller]installChoco'
+            AutoUpgrade = $true
+            Params      = '--pre'
+        }
+
+        File NeoVimRC {
+            Ensure          = 'Present'
+            Type            = 'File'
+            SourcePath      = "$PSScriptRoot\init.vim"
+            DestinationPath = 'C:\Users\steve\AppData\Local\nvim\init.vim'
+            Force           = $true
+            Checksum        = 'SHA-1'
+            DependsOn       = '[cChocoPackageInstaller]NeoVim'
+        }
+
+        File NeoVimQTRC {
+            Ensure          = 'Present'
+            Type            = 'File'
+            SourcePath      = "$PSScriptRoot\ginit.vim"
+            DestinationPath = 'C:\Users\steve\AppData\Local\nvim\ginit.vim'
+            Force           = $true
+            Checksum        = 'SHA-1'
+            DependsOn       = '[cChocoPackageInstaller]NeoVim'
+        }
+
+        Git CloneNeoVimCmpBuffer {
+            RepositoryURL = 'https://github.com/hrsh7th/cmp-buffer'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\cmp-buffer'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        Git CloneNeoVimCmpCmdline {
+            RepositoryURL = 'https://github.com/hrsh7th/cmp-cmdline'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\cmp-cmdline'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        Git CloneNeoVimCmpVvimLsp {
+            RepositoryURL = 'https://github.com/hrsh7th/cmp-nvim-lsp'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\cmp-nvim-lsp'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        Git CloneNeoVimCmpPath {
+            RepositoryURL = 'https://github.com/hrsh7th/cmp-path'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\cmp-path'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        Git CloneNeoVimCmpVsnip {
+            RepositoryURL = 'https://github.com/hrsh7th/cmp-vsnip'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\cmp-vsnip'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        Git CloneNeoVimCmpLuasnip {
+            RepositoryURL = 'https://github.com/saadparwaiz1/cmp_luasnip'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\cmp_luasnip'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        Git CloneNeoVimLuaSnip {
+            RepositoryURL = 'https://github.com/L3MON4D3/LuaSnip'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\LuaSnip'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        Git CloneNeoVimNvimCmp {
+            RepositoryURL = 'https://github.com/hrsh7th/nvim-cmp'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\nvim-cmp'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        Git CloneNeoVimNvimLspInstaller {
+            RepositoryURL = 'https://github.com/williamboman/nvim-lsp-installer'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\nvim-lsp-installer'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        Git CloneNeoVimNvimLspconfig {
+            RepositoryURL = 'https://github.com/neovim/nvim-lspconfig'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\nvim-lspconfig'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        Git CloneNeoVimPlenary {
+            RepositoryURL = 'https://github.com/nvim-lua/plenary.nvim'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\plenary.nvim'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        Git CloneNeoVimPopup {
+            RepositoryURL = 'https://github.com/nvim-lua/popup.nvim'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\popup.nvim'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        Git CloneNeoVimRustTools {
+            RepositoryURL = 'https://github.com/simrat39/rust-tools.nvim'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\rust-tools.nvim'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        # Git CloneNeoVimTelescope {
+        #     RepositoryURL = 'https://github.com/nvim-telescope/telescope.nvim'
+        #     Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\telescope.nvim'
+        #     DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        # }
+
+        Git CloneNeoVimVimEasyAlign {
+            RepositoryURL = 'https://github.com/junegunn/vim-easy-align'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\vim-easy-align'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        Git CloneNeoVimVimVsnip {
+            RepositoryURL = 'https://github.com/hrsh7th/vim-vsnip'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\vim-vsnip'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
+        }
+
+        Git CloneNeoVimGruvbox {
+            RepositoryURL = 'https://github.com/morhetz/gruvbox'
+            Destination   = 'C:\Users\steve\AppData\Local\nvim\bundle\gruvbox'
+            DependsOn     = @('[cChocoPackageInstaller]NeoVim','[cChocoPackageInstaller]Git')
         }
 
         cChocoPackageInstaller NodeJS {

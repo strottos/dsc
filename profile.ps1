@@ -1,4 +1,8 @@
-Set-Alias -Name vi -Value 'C:\Program Files\Vim\vim82\vim.exe'
+Set-Alias -Name vi -Value 'C:\Program Files\nvim\bin\nvim.exe'
+Set-Alias -Name vim -Value 'C:\Program Files\Vim\vim82\vim.exe'
+Set-Alias -Name gvim -Value 'C:\tools\neovim\Neovim\bin\nvim-qt.exe'
+Set-Alias -Name nvim -Value 'C:\tools\neovim\Neovim\bin\nvim.exe'
+Set-Alias -Name ag -Value 'Temporarily Disabled'
 New-Alias which Get-Command
 New-Alias unzip Expand-Archive
 New-Alias od Format-Hex
@@ -12,8 +16,8 @@ function dev {
     #>
 
     # TODO: Do I need both, second needed for Rust, first for VS Code
-    # Invoke-BatchFile 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\Tools\VsDevCmd.bat'
-    Invoke-BatchFile 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat' x64
+    # Invoke-BatchFile 'C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat'
+    Invoke-BatchFile 'C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsall.bat' x64
 }
 
 function DisplayBytesPretty($num) {
@@ -322,7 +326,7 @@ function Invoke-TimeScript([scriptblock]$scriptBlock, $name) {
     #>
 
     if (!$stopWatch) {
-        $script:stopWatch = new-object System.Diagnostics.StopWatch
+        $script:stopWatch = New-Object System.Diagnostics.StopWatch
     }
     $stopWatch.Reset()
     $stopWatch.Start()
